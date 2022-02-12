@@ -1,24 +1,25 @@
-const express = require("express");
-const path = require("path");
-const socket = require("socket.io");
+import express from "express";
+import path from "path";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
 
 // App set up
 const app = express();
+const httpServer = createServer(app);
 
 // Static files
 app.use(express.static(path.join(__dirname, "public")));
 
-const server = app.listen(5000, () => console.log("Listening on port 5000"));
+httpServer.listen(5000, () => console.log("Listening on port 5000"));
 
 // Socket setup
-const io = socket(server);
+const io = new Server(httpServer);
 
-io.on("connection", (socket) => {
+io.on("connection", (socket: Socket) => {
   console.log("Made socket connection", socket.id);
 
   // Listening
   socket.on("chat", (data) => {
-    console.log(data);
     io.sockets.emit("chat", data);
   });
 

@@ -18,6 +18,11 @@ io.on("connection", (socket) => {
 
   // Listening
   socket.on("chat", (data) => {
+    console.log(data);
     io.sockets.emit("chat", data);
+  });
+
+  socket.on("typing", (data) => {
+    socket.broadcast.emit("typing", data);
   });
 });
